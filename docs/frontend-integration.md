@@ -874,6 +874,71 @@ function personaSelector() {
 </script>
 ```
 
+## Livewire 3 Integration
+
+### Persona Switcher Component
+
+```php
+// app/Livewire/PersonaSwitcher.php
+namespace App\Livewire;
+
+use Livewire\Component;
+use Grazulex\LaravelMultiPersona\Services\PersonaManager;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+
+class PersonaSwitcher extends Component
+{
+    public Collection $personas;
+    public ?int $activePersona = null;
+
+    public function mount(PersonaManager $manager): void
+    {
+        $user = Auth::user();
+        $this->personas = $manager->forUser($user);
+        $this->activePersona = $manager->id();
+    }
+
+    public function switch(int $personaId, PersonaManager $manager): void
+    {
+        if ($manager->switchTo($personaId)) {
+            $this->activePersona = $personaId;
+            $this->dispatch('persona-changed', persona: $manager->current());
+        }
+    }
+
+    public function clear(PersonaManager $manager): void
+    {
+        $manager->clear();
+        $this->activePersona = null;
+        $this->dispatch('persona-cleared');
+    }
+
+    public function render()
+    {
+        return view('livewire.persona-switcher');
+    }
+}
+```
+
+### Blade View
+
+```blade
+<!-- resources/views/livewire/persona-switcher.blade.php -->
+<div>
+    <select wire:model.live="activePersona" wire:change="switch($event.target.value)">
+        <option value="">Select persona</option>
+        @foreach ($personas as $persona)
+            <option value="{{ $persona->id }}">{{ $persona->name }}</option>
+        @endforeach
+    </select>
+
+    @if ($activePersona)
+        <button wire:click="clear" class="ml-2">Clear persona</button>
+    @endif
+</div>
+```
+
 ## Best Practices
 
 1. **State Management**: Use proper state management (Vuex/Pinia, Redux/Zustand) for complex apps
