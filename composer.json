@@ -1,5 +1,5 @@
 {
-    "name": "grazulex/laravel-multipersona",
+    "name": "synard/laravel-multipersona",
     "description": "Laravel MultiPersona is a lightweight context-layer system for Laravel users. It allows a single user to switch between different roles, accounts, or tenants dynamically, without creating multiple logins or sessions.",
     "keywords": [
         "laravel",
@@ -13,7 +13,7 @@
         "pest"
     ],
     "type": "library",
-    "homepage": "https://github.com/grazulex/laravel-multipersona",
+    "homepage": "https://github.com/synard1/laravel-multipersona",
     "require": {
         "php": "^8.2",
         "illuminate/support": "^11.0|^12.0",
